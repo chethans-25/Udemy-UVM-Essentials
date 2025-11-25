@@ -213,10 +213,67 @@ Supports type overriding of objects
 C.set_type_override_by_type(child::get_type, parent::get_type);
 
 
+If we use do methos, field macros are not required, but registering class to factory is mandatory to get capabilities of factory override
+
+If we use inbuilt core methods, field macros are required,and registering class to factory is also mandatory 
+
+
+DO METHODS
+
 do_print
-do_copy
-do_compare
+//table format
+
+virtual function void do_print (uvm_printer printer);
+  super.do_print(printer);
+  printer.print_field_int("a",a,$bits(a), UVM_DEC)//name,source, number of bits, radix
+  printer.print_field_string("b",b)//name,source
+  printer.print_field_real("c",c)//name,source
+  printer.print_object("data", data);//name,source
+endfunction
+
 convert2string
+//output in single line
+
+virtual function void convert2string ();
+  string s = super.convert2string();
+  s = {s, $sformatf("a : %0d ", a)};
+  s = {s, $sformatf("b : %0d ", b)};
+  s = {s, $sformatf("c : %0d ", c)};
+  return s;
+endfunction
+
+//inside tb
+`uvm_info ("TB_TOP", $sformatf("%0s", o.convert2string), UVM_NONE);
+
+do_copy
+virtual function void do_copy(uvm_object rhs);
+  obj temp;
+  $cast(temp, rhs);
+  // has access to handle of rhs
+
+  super.do_copy(rhs);
+  this.a = temp.a;
+  this.b = temp.b;
+endfunction
+
+// inside tb
+obj o1, o2;
+
+//create object with create method
+initial begin
+    o1 = obj::type_id::create("o1");
+    o2 = obj::type_id::create("o2");
+
+    o1.randomize();
+    o1.print();
+    o2.copy(o1);
+    o2.print();
+   
+  end
+
+
+
+do_compare
 
 Refer LRM for syntax
 
