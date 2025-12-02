@@ -278,4 +278,83 @@ do_compare
 Refer LRM for syntax
 
 
+UVM COMPONENT 
+
+Uvm_top  is the root node
+Uvm_top --> test
+Test --> env
+Env-->(agent, scoreboard)
+Agent-->(drv, mon, seqr)
+
+// to run the code 
+run_test("class_name");
+//factory automatically calls the phases.
+
+Parent = null means it is a child of uvm_top
+
+
+
+
+CONFIG DB
+
+uvm_config_db#(datatype) :: set( context, inst name, key, value or container);
+
+context = null // accessible everywhere 
+Inst name : name of the class
+
+set() method and get() method
+Value for set method
+Container for get method
+
+String concatenation of <parent>+<inst_name>+<key>
+Should match for both get and set, in order for the data to be transferred
+
+Use * in inst_name ( eg: uvm_test_top.env.agent*) to give access to all sub components of agent while using set() method
+
+
+While declaring Virtual interface in a static component,  use parentheses ()
+
+
+UVM_PHASES
+
+
+run_test() will call phases in a sequential manner
+
+Build phase executes in top down approach
+Other phases execute in bottom up approach
+
+Classification based on Time consumption 
+
+Time consuming (task) and non time consuming (function) methods
+
+When we override a method,  we need to call super.new()
+
+Use raise and drop objections inside time consuming methods.
+
+Classification based on operation
+
+Construction phases:
+Build phase,  connect phase,  end of elaborating,  start of simulation
+
+
+Run phases:( all are time consuming )
+Reset, configure, main, shut down
+With pre and post phases
+
+Reset: reset to default state
+Configure: initialize variable, memory, array in tb
+Main: generate stimuli and collect response 
+Shutdown: make sure stimuli Generation and response collection is successful 
+
+Cleanup phases:
+Extract,  check,  report,  final
+
+Collect and report data
+Check coverage is achieved or not
+
+
+
+
+
+
 
