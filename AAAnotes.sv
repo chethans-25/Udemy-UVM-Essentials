@@ -327,9 +327,10 @@ Classification based on Time consumption
 
 Time consuming (task) and non time consuming (function) methods
 
-When we override a method,  we need to call super.new()
+When we override a method,  we need to call super. methods
 
 Use raise and drop objections inside time consuming methods.
+because uvm will not automatically wait for time specified as delay, we need to raise objections
 
 Classification based on operation
 
@@ -352,6 +353,15 @@ Extract,  check,  report,  final
 Collect and report data
 Check coverage is achieved or not
 
+Time consuming phases in single component
+// each phase takes complete time until phase ends, and then moves to next phase 
+
+Time consuming phases in multiple component
+// each phase takes complete time until phase ends for slowest component,
+//  and then moves to next phase of all components
+
+
+Timeout
 
 
 
