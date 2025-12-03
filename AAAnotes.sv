@@ -362,6 +362,62 @@ Time consuming phases in multiple component
 
 
 Timeout
+Maximum absolute simulation time before fatal time out error 
+
+uvm_top.set_timeout(
+time timeout,
+bit overridable
+);
+
+//default timeout is 9200 seconds
+
+
+Drain Time 
+Drain time in a UVM component is the extra time a phase is kept alive after the last objection is dropped
+
+phase.phase_done.set_drain_time(this, 200);
+
+Drain time in multiple components
+Drain time starts after the completion of phase of slowest component
+
+Phase Debug
+Add the following line in run options
++ UVM_PHASE_TRACE
+
+Objection Debug
+Add the following line in run options
++ UVM_OBJECTION_TRACE
+
+
+
+
+TLM
+
+Port and Export
+
+Port
+Initiator
+
+Export
+Responder 
+
+Control flow
+Data flow
+
+Put operation 
+Get operation 
+Transport operation 
+
+Blocking and Non blocking 
+
+
+Port, export, imp
+Export should not be the end point
+Implementation imp should be the end point 
+
+Connect phase
+
+Start point.connect(end point)
 
 
 
