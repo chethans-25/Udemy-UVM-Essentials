@@ -412,15 +412,64 @@ Blocking and Non blocking
 
 
 Port, export, imp
-Export should not be the end point
-Implementation imp should be the end point 
+// Export should not be the end point
+// Implementation imp should be the end point 
 
 Connect phase
 
-Start point.connect(end point)
+<Start_point>.connect(<end_point>)
+
+Put method
+
+uvm_blocking_put_port #(type) //producer
+uvm_blocking_put_port #(int) send;//producer
+
+uvm_blocking_put_export #(type) //consumer
+uvm_blocking_put_export #(int) recv;//consumer
+
+uvm_blocking_put_imp #(type, class) //consumer
+uvm_blocking_put_imp #(int, consumer) imp;//consumer
+
+all above three are classes, hence they need handles and objects should be created.
+send = new("send",this);// inside build phase of producer
+recv = new("recv",this);// inside build phase of consumer
+imp = new("imp",this);// inside build phase of consumer
+
+
+//connection
+prod.send.connect(cons.recv);//won't work without imp because export cant be the end point
+cons.recv.connect(cons.imp);//won't work without imp because export cant be the end point
 
 
 
+// producer to consumer without export 
+prod.send.connect(cons.imp); //without export
 
 
+// subproducer to producer to consumer
+// port-port to imp
+s.subport.connect(port);//inside port
+p.port.connect(c.imp)//inside environment
+
+
+//print hierarchy
+uvm_top.print_topology();
+
+// producer to consumer to sub consumer
+// port to export-imp
+c.export.connect(c.imp)//inside consumer
+p.port.connect(c.export)//inside environment
+
+
+
+GET method
+
+uvm_blocking_get_port #(type) //producer
+uvm_blocking_get_port #(int) port;//producer
+
+uvm_blocking_get_export #(type) //consumer
+uvm_blocking_get_export #(int) export;//consumer
+
+uvm_blocking_get_imp #(type, class) //consumer
+uvm_blocking_get_imp #(int, consumer) imp;//consumer
 
