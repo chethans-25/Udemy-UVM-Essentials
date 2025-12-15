@@ -187,7 +187,7 @@ s.copy(f);
 
 
 CLONE
-consttructor is not needed for 2nd member
+constructor is not needed for 2nd member
 
 f=new();
 $cast(s,f.clone());

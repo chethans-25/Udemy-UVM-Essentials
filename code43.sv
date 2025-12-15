@@ -1,7 +1,9 @@
+// automation with print() function
+// other field macro
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
- 
- 
+
  
 class obj extends uvm_object;
 //  `uvm_object_utils(obj)

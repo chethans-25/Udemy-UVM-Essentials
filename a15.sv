@@ -7,13 +7,13 @@ Add the code in the template mentioned below to achieve the following objectives
 
 3. Warning messages should be sent one after another starting from Warning 1 to Warning 4 at an interval of 10 ns i.e. Warning 1 at 0 ns, Warning 2 at 10 ns and so on.
 
-4. Override the UVM_WARNING action so that it is included in the UVM quit count.
+4. Override the uvm_warning action so that it is included in the UVM quit count.
 
 5. Set the quit count threshold at 4.
 
 */
 
-// exit simulation with UVM_WARNING
+// exit simulation with uvm_warning
 
 `include "uvm_macros.svh"
 import uvm_pkg::*;
@@ -33,13 +33,13 @@ class a extends uvm_component;
     /////////////////add four independent warning messages in this task(Main task)
     ////////////Add ID as "a" and Messages as Warning 1, Warning 2, Warning 3 and Warning 4
     ////////////Send the warning message one after another starting from warning 1 at an interval of 10 ns (warning 1 must trigger at 0 ns , warning 2 must trigger at 10 ns and so on)
-    `UVM_WARNING("a", "WARNING 1")
+    `uvm_warning("a", "WARNING 1")
     #10;
-    `UVM_WARNING("a", "WARNING 2")
+    `uvm_warning("a", "WARNING 2")
     #10;
-    `UVM_WARNING("a", "WARNING 3")
+    `uvm_warning("a", "WARNING 3")
     #10;
-    `UVM_WARNING("a", "WARNING 4")
+    `uvm_warning("a", "WARNING 4")
   endtask
   
  
@@ -47,19 +47,20 @@ class a extends uvm_component;
 endclass
  
 /////////////////////////////////////////////
- 
- 
+
+
 module tb;
- 
+
 ///////////// Add a code to execute main task of a
-//////////// Override the behavior of the UVM_WARNING such that it should be counted in UVM_QUIT COUNT
+//////////// Override the behavior of the uvm_warning such that it should be counted in UVM_QUIT COUNT
 ////////Set the quit count threshold to be 4
 a a1;
 
 initial
 begin
-  a1 = new ("a", null);
+  a1 = new ("a1", null);
   a1.set_report_severity_action(UVM_WARNING, UVM_COUNT);//arguments are case sensitive
   a1.set_report_max_quit_count(4);
+  a1.run();
 end 
 endmodule

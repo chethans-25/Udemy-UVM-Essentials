@@ -1,3 +1,5 @@
+// field macro for object
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
@@ -17,13 +19,12 @@ class parent extends uvm_object;
 endclass
  
 class child extends uvm_object;
-  
-   parent p;
+  parent p;
   
   function new(string path = "child");
     super.new(path);
     p = new("parent");
-  endfunction 
+  endfunction
   
   `uvm_object_utils_begin(child)
   `uvm_field_object(p,UVM_DEFAULT);

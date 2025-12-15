@@ -1,3 +1,6 @@
+// automation with print() function
+// uvm_field_int macro
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  

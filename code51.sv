@@ -44,7 +44,7 @@ second s1, s2; ///shallow
     s2 = new("s2");
     s1.f.randomize();
     s1.print();
-    s2 = s1;
+    s2 = s1;//shallow copy
     s2.print();
     
     s2.f.data = 12;

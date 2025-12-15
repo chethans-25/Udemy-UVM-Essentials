@@ -1,3 +1,5 @@
+// field macros for different arrays
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
@@ -23,10 +25,10 @@ class array extends uvm_object;
   endfunction 
   
   `uvm_object_utils_begin(array)
-  `uvm_field_sarray_int(arr1, UVM_DEFAULT);
-  `uvm_field_array_int(arr2, UVM_DEFAULT);
-  `uvm_field_queue_int(arr3, UVM_DEFAULT);
-  `uvm_field_aa_int_int(arr4, UVM_DEFAULT);
+  `uvm_field_sarray_int(arr1, UVM_DEFAULT);//static array or fixed array
+  `uvm_field_array_int(arr2, UVM_DEFAULT);//dynamic array
+  `uvm_field_queue_int(arr3, UVM_DEFAULT);//queue
+  `uvm_field_aa_int_int(arr4, UVM_DEFAULT);//associative array
   `uvm_object_utils_end
   
   task run();

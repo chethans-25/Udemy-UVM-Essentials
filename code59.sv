@@ -41,7 +41,7 @@ class comp extends uvm_component;
   
   function new(string path = "second", uvm_component parent = null);
     super.new(path, parent);
-    f = first::type_id::create("f");
+    f = first::type_id::create("f");//affected by type override from tb------> first_mod::type_id::create("f");
     f.randomize();
     f.print();
   endfunction 
@@ -57,7 +57,9 @@ module tb;
   comp c;
   
   initial begin
-    c.set_type_override_by_type(first::get_type, first_mod::get_type); 
+    c.set_type_override_by_type(first::get_type, first_mod::get_type); //type id create method will be affected in comp class
     c = comp::type_id::create("comp", null); 
   end
+
+endmodule
  
