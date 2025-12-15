@@ -1,3 +1,5 @@
+// Working with hierarchy
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
@@ -64,7 +66,7 @@ module tb;
   
  initial begin
    e  = new("ENV", null);
-   e.set_report_verbosity_level_hier(UVM_HIGH);
+   e.set_report_verbosity_level_hier(UVM_HIGH);//set verbosity level for environment e hierarchy
    e.run(); 
   end
   

@@ -30,7 +30,7 @@ All macros should start with ` and should not end with ;
 Working with uvm_info()
 it shows the id which we specify in the argument, what file is sending the message, line number, at what time, file hierarchy
 
-this is how uvm_info is different from $display
+this is how uvm_info is different from $display()
 
 sformatf("value : %0d", data);
 //system function to send string as well as a variable

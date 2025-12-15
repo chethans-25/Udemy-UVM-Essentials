@@ -1,3 +1,6 @@
+//  Working with log file
+// extracting reports to log file
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
