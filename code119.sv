@@ -19,7 +19,7 @@ class producer extends uvm_component;
   task main_phase(uvm_phase phase);
    
     phase.raise_objection(this);
-    send.put(data);
+    send.put(data);// define put method at the end point ( consumer )
     `uvm_info("PROD" , $sformatf("Data Sent : %0d", data), UVM_NONE);
     phase.drop_objection(this);
     

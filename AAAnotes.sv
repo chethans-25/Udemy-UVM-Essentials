@@ -473,3 +473,26 @@ uvm_blocking_get_export #(int) export;//consumer
 uvm_blocking_get_imp #(type, class) //consumer
 uvm_blocking_get_imp #(int, consumer) imp;//consumer
 
+// for get operation
+get() method to be defined at the end point
+
+// for put operation
+put() method to be defined at the end point
+
+// for transport operation
+transport() method to be defined at the end point
+
+
+
+UVM Analysis Port
+1 to many
+non time consuming
+
+uvm_analysis_port #(datatype)
+uvm_analysis_imp #(datatype, class)
+
+port.write(data);//in port
+
+virtual function void write (data) //in imp
+end
+

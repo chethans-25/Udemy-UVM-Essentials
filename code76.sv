@@ -1,3 +1,6 @@
+// set and get method example
+
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  

@@ -1,3 +1,5 @@
+// port-port to Imp
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
@@ -22,7 +24,7 @@ class subproducer extends uvm_component;
  task main_phase(uvm_phase phase);
   phase.raise_objection(this);
   `uvm_info("SUBPROD", $sformatf("Data Sent : %0d", data), UVM_NONE); 
-  subport.put(data);
+  subport.put(data); //define put method at the end point ( consumer )
   phase.drop_objection(this);
  endtask
   

@@ -1,12 +1,14 @@
+// get method implementation
+
 `include "uvm_macros.svh"
 import uvm_pkg::*;
  
 class producer extends uvm_component;
   `uvm_component_utils(producer)
   
-  int data = 12;
+  uvm_blocking_get_port #(int) port;
   
-  uvm_blocking_put_port #(int) send;
+  int data = 0;
   
   function new(input string path = "producer", uvm_component parent = null);
     super.new(path, parent);
@@ -14,15 +16,13 @@ class producer extends uvm_component;
   
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    send  = new("send", this);
+    port   = new("port", this);
   endfunction
   
-  
-  
- task main_phase(uvm_phase phase);
+  task main_phase(uvm_phase phase);
   phase.raise_objection(this);
-   `uvm_info("PROD", $sformatf("Data Sent : %0d", data), UVM_NONE); 
-  send.put(data);//define put method at the end point ( consumer )
+  port.get(data);//define get method at the end point ( consumer )
+  `uvm_info("PROD", $sformatf("Data Recv : %0d", data), UVM_NONE); 
   phase.drop_objection(this);
  endtask
   
@@ -33,8 +33,9 @@ endclass
 class consumer extends uvm_component;
   `uvm_component_utils(consumer)
   
+  int data = 12;
   
-  uvm_blocking_put_imp#(int, consumer) imp;
+  uvm_blocking_get_imp#(int, consumer) imp;
   
   function new(input string path = "consumer", uvm_component parent = null);
     super.new(path, parent);
@@ -46,10 +47,11 @@ class consumer extends uvm_component;
     imp  = new("imp", this);
   endfunction
   
-  
-  function void put(int datar);
-    `uvm_info("Cons", $sformatf("Data Rcvd : %0d", datar), UVM_NONE);
-  endfunction
+  virtual task get(output int datar);//output keyword is important
+    `uvm_info("CONS", $sformatf("Data Sent : %0d", data), UVM_NONE); 
+     datar = data;
+  endtask
+ 
   
 endclass
  
@@ -62,19 +64,19 @@ producer p;
 consumer c;
  
  
-  function new(input string inst = "env", uvm_component c);
-super.new(inst, c);
+  function new(input string path = "env", uvm_component parent = null);
+    super.new(path, parent);
 endfunction
  
 virtual function void build_phase(uvm_phase phase);
 super.build_phase(phase);
-  p = producer::type_id::create("p",this);
   c = consumer::type_id::create("c", this);
+  p = producer::type_id::create("p",this);
 endfunction
  
 virtual function void connect_phase(uvm_phase phase);
 super.connect_phase(phase);
-  p.send.connect(c.imp);
+  p.port.connect(c.imp);
 endfunction
  
  
@@ -87,8 +89,8 @@ class test extends uvm_test;
  
 env e;
  
-  function new(input string inst = "test", uvm_component c);
-super.new(inst, c);
+function new(input string path = "test", uvm_component parent = null);
+  super.new(path, parent);
 endfunction
  
  
@@ -111,3 +113,4 @@ end
  
  
 endmodule
+ 
