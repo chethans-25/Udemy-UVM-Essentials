@@ -1,4 +1,4 @@
-UVM ESSENTIALS 
+********************************************  UVM ESSENTIALS  ********************************************
 
 
 REPORTING MECHANISM
@@ -120,7 +120,7 @@ drv.set_report_default_file(file);//everything is copied
 drv.set_report_severity_file(UVM_ERROR, file); //copies only UVM_ERROR
 
 
-*****GETTING STARTED WITH BASE CLASSES: UVM_OBJECT
+******************************************** GETTING STARTED WITH BASE CLASSES: UVM_OBJECT ********************************************
 
 dynamic:  UVM_OBJECT
 uvm_transaction
@@ -278,7 +278,7 @@ do_compare
 Refer LRM for syntax
 
 
-UVM COMPONENT 
+********************************************  UVM COMPONENT ********************************************
 
 Uvm_top  is the root node
 Uvm_top --> test
@@ -295,7 +295,7 @@ Parent = null means it is a child of uvm_top
 
 
 
-CONFIG DB
+******************************************** CONFIG DB ********************************************
 
 uvm_config_db#(datatype) :: set( context, inst name, key, value or container);
 
@@ -315,7 +315,7 @@ Use * in inst_name ( eg: uvm_test_top.env.agent*) to give access to all sub comp
 While declaring Virtual interface in a static component,  use parentheses ()
 
 
-UVM_PHASES
+******************************************** UVM_PHASES ******************************************** 
 
 
 run_test() will call phases in a sequential manner
@@ -391,7 +391,7 @@ Add the following line in run options
 
 
 
-TLM
+******************************************** TLM ********************************************
 
 Port and Export
 
@@ -496,3 +496,152 @@ port.write(data);//in port
 virtual function void write (data) //in imp
 end
 
+
+
+********************************************SEQUENCES********************************************
+
+What is a sequence? class that gives us an ability to specify the series of an expression with the help of an input port to test the specific functionality of design
+
+sequencer and driver use TLM port for communication
+
+driver : to include seq_item_port
+sequencer : to include seq_item_export
+
+No need to write sequencer class code, it is inbuild
+
+sequence should have body, pre_body and post_body tasks
+
+driver, monitor, sequence should have transaction parameter 
+
+driver run_phase
+
+seq_item_port.get_next_item(tx);
+//send to DUT
+seq_item_port.item_done();
+
+env or test run_phase
+raise_objection
+seq1.start(env.agt.seqr);//start sequence
+//use fork join for multiple sequences
+drop_objection
+
+
+
+Sequence flow
+
+// refer image
+
+sequence methods
+type_id::create()
+wait_for_grant()
+randomize()
+send_request(tx)
+wait_for_item_done()
+
+driver methods
+seq_item_port.get_next_item(tx)
+seq_item_port.item_done()
+
+
+`uvm_do(seq_or_item)
+creates object, randomize and send the data to the driver.
+
+trans.print(uvm_default_line_printer);
+
+Other methods to send data to driver
+create object
+start_item(tx)//has wait_for_grant embedded in it
+randomize()
+finish_item(tx) // has send_request and wait_for_item_done embedded in it
+
+the above method has flexibility to modify data after randomization, unlike in `uvm_do()
+
+
+Arbitration mechanism
+start method arguments
+s1.start(env.agt.seqr, null, 100) // sequencer, parent sequence, priority, call_pre_post
+
+env.agt.seqr.set_arbitration(UVM_SEQ_ARB_WEIGHTED);
+s2.start(env.agt.seqr, null, 100) 
+s1.start(env.agt.seqr, null, 200) 
+//TOTAL = 300
+threshold = 250 (auto generated which changes)
+seq with higher priority gets frequent access
+
+
+
+env.agt.seqr.set_arbitration(UVM_SEQ_ARB_RANDOM);// priority does not matter
+s2.start(env.agt.seqr, null, 100) 
+s1.start(env.agt.seqr, null, 200) 
+
+
+env.agt.seqr.set_arbitration(UVM_SEQ_ARB_STRICT_FIFO); // higher priority gets first access
+//if priority is same for multiple sequence, first one to come in code gets first access
+
+env.agt.seqr.set_arbitration(UVM_SEQ_ARB_STRICT_RANDOM);
+//for diff priority it is similar to strict fifo, 
+// for same priority, it will be random
+
+
+
+Holding access of sequencer
+
+If priority are same for both S1, S2
+S1 --> 3 tx
+S2 --> 3 tx
+
+S1 - 1st tx
+S2 - 1st tx
+S1 - 2nd tx
+S2 - 2nd tx
+S1 - 3rd tx
+S2 - 3rd tx
+
+If S1 has more priority
+S1 - 1st tx
+S1 - 2nd tx
+S1 - 3rd tx
+S2 - 1st tx
+S2 - 2nd tx
+S2 - 3rd tx
+
+
+Priority/ Lock/ Grab methods
+
+default
+Alternate access
+
+priority
+// different arbitration methods
+seq with higher priority gets access first
+
+
+Lock method
+// inside body task
+lock(sequencer_name)
+
+//logic
+
+unlock(sequencer_name)
+
+order in which seq is started also matters.
+
+
+
+
+************************Summary***********************************
+
+transaction: keep track of all IO present in DUT
+sequence: combination of transactions to verify specific test cases
+sequencer: Manage sequences. Send sequence to driver after request 
+driver: send request to sequencer for sequence, apply sequence to the DUT 
+monitor: collect response of DUT and forward to scoreboard
+scoreboard: compare response with golden Data
+agent: encapsulate driver, sequencer, monitor. Connect Driver and Sequence TLM ports
+environment: encapsulate agent and scoreboard. Connect Analysis port of Mon and SCO 
+Test: encapsulate env. Start Sequence
+testbench : run_test
+
+
+
+************************Combinational Adder***********************************
