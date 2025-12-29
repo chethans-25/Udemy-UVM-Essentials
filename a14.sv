@@ -28,10 +28,16 @@ endclass
 
 module TB_TOP;
   component comp;
+  
   initial begin
     comp = new("comp", null);
-    uvm_top.set_report_verbosity_level(UVM_DEBUG);
-    comp.set_report_severity_id_override(UVM_DEBUG, "CMP2", UVM_NONE);
+    
+    // Enable DEBUG messages globally so CMP1 is visible
+    comp.set_report_verbosity_level(UVM_DEBUG);
+    
+    // Block messages with ID "CMP2" by setting their action to NO_ACTION
+    comp.set_report_id_action("CMP2", UVM_NO_ACTION);
+    
     comp.run();
   end
 endmodule

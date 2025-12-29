@@ -62,13 +62,13 @@ class driver extends uvm_driver #(transaction);
       super.new(path, parent);
      endfunction
  
-transaction tc;
+transaction t;
 virtual mux_if m_if;
  
  
     virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      tc = transaction::type_id::create("tc");
+      t = transaction::type_id::create("t");
  
       if(!uvm_config_db #(virtual mux_if)::get(this,"","m_if",m_if)) 
       `uvm_error("DRV","Unable to access uvm_config_db");
@@ -77,12 +77,12 @@ virtual mux_if m_if;
     virtual task run_phase(uvm_phase phase);
     forever begin
       
-    seq_item_port.get_next_item(tc);
-    m_if.a <= tc.a;
-    m_if.b <= tc.b;
-    m_if.c <= tc.c;
-    m_if.d <= tc.d;
-    m_if.sel <= tc.sel;
+    seq_item_port.get_next_item(t);
+    m_if.a <= t.a;
+    m_if.b <= t.b;
+    m_if.c <= t.c;
+    m_if.d <= t.d;
+    m_if.sel <= t.sel;
       `uvm_info("DRV", $sformatf("Trigger DUT a :%0d , b :%0d , c : %0d , d : %0d , sel : %0d",t.a, t.b, t.c, t.d, t.sel), UVM_NONE); 
     seq_item_port.item_done();
     #10;  
@@ -148,21 +148,14 @@ transaction tr;
  
   virtual function void write(input transaction t);
    tr = t;
-  `uvm_info("SCO",$sformatf("Data rcvd from Monitor a :%0d , b :%0d , c : %0d , d : %0d , sel : %0d , y : %0d",t.a, t.b, t.c, t.d, t.sel, t.y), UVM_NONE);
+  `uvm_info("SCO",$sformatf("Data rcvd from Monitor a :%0d , b :%0d , c : %0d , d : %0d , sel : %0d , y : %0d",tr.a, tr.b, tr.c, tr.d, tr.sel, tr.y), UVM_NONE);
   
-  case ({sel,y})
-  begin
-    {2'b00,a} | {2'b01,b} | {2'b10,c} | {2'b11,d}: `uvm_info("SCO","Test Passed", UVM_NONE)
-    default: `uvm_info("SCO","Test Failed", UVM_NONE);
-  end
+  case ({tr.sel,tr.y})
+    {2'b00,tr.a} , {2'b01,tr.b} , {2'b10,tr.c} , {2'b11,tr.d}: `uvm_info("SCO","Test Passed", UVM_NONE)
+    default: `uvm_info("SCO","Test Failed", UVM_NONE)
   endcase
   
-  
-  // if(tr.y == tr.a + tr.b)
-  //      `uvm_info("SCO","Test Passed", UVM_NONE)
-  // else
-  //      `uvm_info("SCO","Test Failed", UVM_NONE);
-  //  endfunction
+  endfunction
   
   
   
@@ -255,7 +248,7 @@ module add_tb();
  
 mux_if m_if();
  
-add dut (.a(m_if.a), .b(m_if.b), .y(m_if.y));
+mux dut (.a(m_if.a), .b(m_if.b), .c(m_if.c), .d(m_if.d), .sel(m_if.sel), .y(m_if.y));
  
 initial begin
 $dumpfile("dump.vcd");
