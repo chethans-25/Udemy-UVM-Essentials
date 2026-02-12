@@ -335,7 +335,7 @@ because uvm will not automatically wait for time specified as delay, we need to 
 Classification based on operation
 
 Construction phases:
-Build phase,  connect phase,  end of elaborating,  start of simulation
+Build phase,  connect phase,  end of elaboration,  start of simulation
 
 
 Run phases:( all are time consuming )
@@ -396,10 +396,10 @@ Add the following line in run options
 Port and Export
 
 Port
-Initiator
+// Initiator
 
 Export
-Responder 
+// Responder 
 
 Control flow
 Data flow
@@ -418,6 +418,7 @@ Port, export, imp
 Connect phase
 
 <Start_point>.connect(<end_point>)
+// connection can be done in any phase before the start of run phase
 
 Put method
 
@@ -431,6 +432,8 @@ uvm_blocking_put_imp #(type, class) //consumer
 uvm_blocking_put_imp #(int, consumer) imp;//consumer
 
 all above three are classes, hence they need handles and objects should be created.
+// use only new() method.
+// create method is not applicable
 send = new("send",this);// inside build phase of producer
 recv = new("recv",this);// inside build phase of consumer
 imp = new("imp",this);// inside build phase of consumer
